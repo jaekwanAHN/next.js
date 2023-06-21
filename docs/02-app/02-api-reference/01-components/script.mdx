@@ -43,34 +43,41 @@ Script 컴포넌트에서 사용할 수 있는 Props의 일부 입니다:
 
 ## Required Props
 
-The `<Script />` component requires the following properties.
+`<Script />` 컴포넌트는 다음의 Props들이 필요합니다.
 
 ### `src`
 
-A path string specifying the URL of an external script. This can be either an absolute external URL or an internal path. The `src` property is required unless an inline script is used.
+A path string specifying the URL of an external script. 외부 스크립트의 지정된 URL의 경로 스트링입니다. This can be either an absolute external URL or an internal path. 이것은 절대 외부 경로 혹은 내부 경로 입니다. The `src` property is required unless an inline script is used. `scr` 프로퍼티는 인라인 스크립트가 사용되지 않는 경우 요구됩니다.
 
 ## Optional Props
 
 The `<Script />` component accepts a number of additional properties beyond those which are required.
+`<Script/>` 컴포넌트는 필수 properites외에 여러 추가 Props를 허용합니다.
 
 ### `strategy`
 
 The loading strategy of the script. There are four different strategies that can be used:
+스크립트의 로딩 전략입니다. 사용할 수 있는 네 가지 다른 전략들이 있습니다.
 
-- `beforeInteractive`: Load before any Next.js code and before any page hydration occurs.
-- `afterInteractive`: (**default**) Load early but after some hydration on the page occurs.
-- `lazyOnload`: Load during browser idle time.
-- `worker`: (experimental) Load in a web worker.
+- `beforeInteractive`: Load before any Next.js code and before any page hydration occurs. Next.js 코드가 로드 되기 전 그리고 페이지 수화가 발생하기전에 로드합니다. 
+- `afterInteractive`: (**기본**) Load early but after some hydration on the page occurs. 초기에 로드하되 페이지에 약간의 수화가 발생하고 나서 로드됩니다. 
+- `lazyOnload`: Load during browser idle time. 브라우저 유후 시간동안 로드됩니다.
+- `worker`: (실험적) Load in a web worker. 웹 워커에서 로드됩니다.
 
 ### `beforeInteractive`
 
 Scripts that load with the `beforeInteractive` strategy are injected into the initial HTML from the server, downloaded before any Next.js module, and executed in the order they are placed before _any_ hydration occurs on the page.
+`beforeInteractive` 전략으로 로드된 스크립트 입니다.서버에서 초기 HTML에 삽입된, Next.js 모듈이 다운로드 되기전에, 그리고 페이지 수화가 발생하기 전에 배치된 순서대로 실행됩니다.
 
 Scripts denoted with this strategy are preloaded and fetched before any first-party code, but their execution does not block page hydration from occurring.
+이 전략으로 표시된 스크립트는 퍼스트파티코드 보다 먼저 불러와지고 미리 로드됩니다. 그러나 이 스크립트의 실행은 페이지 수화를 차단하지 않습니다.
 
 `beforeInteractive` scripts must be placed inside the root layout (`app/layout.tsx)` and are designed to load scripts that are needed by the entire site (i.e. the script will load when any page in the application has been loaded server-side).
+`beforeInteractive` 스크립트는 루트 레이아웃(`app/layout.tsx)` 안에 존재해야하고 전체 사이트에 필요한 스크립트를 로드하도록 설계되었습니다(즉, 애플리케이션의 페이지가 서버 측에 로드되면 스크립트가 로드됩니다.).
 
 **This strategy should only be used for critical scripts that need to be fetched before any part of the page becomes interactive.**
+
+**이 전략은 페이지의 일부가 대화형이 되기 전에 가져와야 하는 중요한 스크립트에만 사용해야 합니다.**
 
 <AppOnly>
 
@@ -138,15 +145,17 @@ export default function Document() {
 </PagesOnly>
 
 > **Good to know**: Scripts with `beforeInteractive` will always be injected inside the `head` of the HTML document regardless of where it's placed in the component.
+> **알면 좋습니다**: `beforeInteractive` 스크립트는 구성 요소의 위치에 관계없이 항상 HTML 문서의 `head` 내부에 삽입됩니다.
 
 Some examples of scripts that should be loaded as soon as possible with `beforeInteractive` include:
+`beforeInteractive`로 가능한 한 빨리 로드되어야 하는 스크립트의 몇 가지 예는 다음과 같습니다.
 
-- Bot detectors
+- Bot detectors 
 - Cookie consent managers
 
 ### `afterInteractive`
 
-Scripts that use the `afterInteractive` strategy are injected into the HTML client-side and will load after some (or all) hydration occurs on the page. **This is the default strategy** of the Script component and should be used for any script that needs to load as soon as possible but not before any first-party Next.js code.
+Scripts that use the `afterInteractive` strategy are injected into the HTML client-side and will load after some (or all) hydration occurs on the page. `afterInteractive`전략을 사용한 스크립트는 HTML 클라이언트 측에 삽입되며 페이지에서 일부(또는 전체) 수화가 발생한 후 로드됩니다. **This is the default strategy** of the Script component and should be used for any script that needs to load as soon as possible but not before any first-party Next.js code. 이것은 스크립트 컴포넌트의 **기본 전략이며** 가능한 한 빨리 로드해야 하지만 자사 Next.js 코드보다 먼저 로드해야 하는 모든 스크립트에 사용해야 합니다.
 
 `afterInteractive` scripts can be placed inside of any page or layout and will only load and execute when that page (or group of pages) is opened in the browser.
 
